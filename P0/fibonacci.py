@@ -1,5 +1,6 @@
 print('program to calculate a term of fibonacci series')
-
+print('attention, for a correct result n>0, (the first position is 1)')
+print('')
 p=int(input('insert the position of the term of fibonacci series (n):'))
 l=[0,1]
 def fibonacci(n):
