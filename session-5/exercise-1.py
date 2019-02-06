@@ -1,3 +1,4 @@
+print("Program to count the number of bases and the percentage")
 def count_bases(seq):
     """Counting the number of bases in the sequence"""
     resultA=seq.count("A")
@@ -18,7 +19,7 @@ ng=n['Base G']
 #calculate the total sequence length
 tl=len(s)
 print("The total length is: {}".format(tl))
-#calculate the percentage of As in the sequence
+#calculate the percentage of bases in the sequence
 if tl>0:
     perca= round(100.0* na / tl, 1)
     percc = round(100.0 * na / tl, 1)
