@@ -13,7 +13,7 @@ na=count_a(s)
 print("The number of As is:{}".format(na))
 
 #calculate the total sequence length
-tl=length
+tl=len(s)
 
 #calculate the percentage of As in the sequence
 if tl>0:
