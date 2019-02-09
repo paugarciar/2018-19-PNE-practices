@@ -22,9 +22,9 @@ print("The total length is: {}".format(tl))
 #calculate the percentage of bases in the sequence
 if tl>0:
     perca= round(100.0* na / tl, 1)
-    percc = round(100.0 * na / tl, 1)
-    perct = round(100.0 * na / tl, 1)
-    percg = round(100.0 * na / tl, 1)
+    percc = round(100.0 * nc / tl, 1)
+    perct = round(100.0 * nt / tl, 1)
+    percg = round(100.0 * ng / tl, 1)
 else:
     perca=0
     percc=0
