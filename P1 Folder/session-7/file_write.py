@@ -1,6 +1,6 @@
 # example of reading and writting in a file located in our local file system
 
-NAME = "my-notes"
+NAME = "mynotes.txt"
 
 # open the file
 myfile = open(NAME, 'r')  # myfile is an object!!
