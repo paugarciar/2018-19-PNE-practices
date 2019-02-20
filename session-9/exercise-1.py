@@ -1,7 +1,7 @@
 import socket
 import termcolor
-PORT = 8080
-IP = "212.128.253.70"
+PORT = 8081
+IP = "212.128.253.73"
 MAX_OPEN_REQUEST = 5
 
 
@@ -9,18 +9,12 @@ def process_client(cs):
 
     # reading message from the client
     msg = cs.recv(2048).decode("utf-8")  # maximum length that we want to receive
-    if msg == "EXIT":
-        cs.close()
-    else:
-        colors = ['green', 'blue', 'magenta', 'red', 'cyan', 'yellow', 'grey', 'white']
-        for i in range(len(colors)+1):
-            termcolor.cprint(msg, colors[i])
-            break
+    termcolor.cprint(msg, "yellow")
 
-        # sending the message back to the client (because we are an echo server)
-        cs.send(str.encode(msg))
+    # sending the message back to the client (because we are an echo server)
+    cs.send(str.encode(msg))
 
-        cs.close()
+    cs.close()
 
 
 # Create a socket for connecting to the clients
@@ -32,8 +26,8 @@ serversocket.listen(MAX_OPEN_REQUEST)
 
 print("Socket ready: {}".format(serversocket))
 
-
-while True:
+on =True
+while on:
 
     print("waiting for connections at: {}, {}".format(IP, PORT))
     (clientsocket, address) = serversocket.accept()
@@ -43,3 +37,5 @@ while True:
     print("attending client: {}".format(address))
 
     process_client(clientsocket)
+    if msg == "EXIT":
+        on = False
