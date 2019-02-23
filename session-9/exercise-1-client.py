@@ -1,7 +1,7 @@
 import socket
 
 # SERVER IP, PORT
-IP = "212.128.253.73"
+IP = "192.168.1.106"
 PORT = 8081
 
 # Create the socket
