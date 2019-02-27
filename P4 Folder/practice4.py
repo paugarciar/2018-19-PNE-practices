@@ -3,7 +3,7 @@ import termcolor
 
 # Change this IP to yours!!!!!
 IP = "212.128.253.70"
-PORT = 8080
+PORT = 8081
 MAX_OPEN_REQUESTS = 5
 
 
@@ -13,12 +13,20 @@ def process_client(cs):
 
     # Read client message. Decode it as a string
     msg = cs.recv(2048).decode("utf-8")
-
-    # Print the received message, for debugging
+    lines_msg = msg.split("\n")
+    first_line = lines_msg[0].split(" ")
     print()
     print("Request message: ")
     termcolor.cprint(msg, 'green')
-    f = open("index.html", "r")
+    if first_line[1] == "/":
+        page = "index.html"
+    elif first_line[1] == "/blue":
+        page = "blue.html"
+    elif first_line[1] == "/pink":
+        page = "pink.html"
+    else:
+        page = "error.html"
+    f = open(page, "r")
     content = f.read()
     f.close()
     status_line = "HTTP/1.1 200 OK\r\n"
