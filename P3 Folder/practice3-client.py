@@ -1,7 +1,7 @@
 import socket
 
 # SERVER IP, PORT
-IP = "192.168.1.34"
+IP = "192.168.1.106"
 PORT = 8081
 
 # Create the socket
@@ -17,7 +17,7 @@ while True:
     # Send the request message to the server
     s.send(str.encode(msg))
 
-    # Receive the servers respoinse
+    # Receive the servers response
     response = s.recv(2048).decode()
 
     # Print the server's response
