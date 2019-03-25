@@ -1,0 +1,27 @@
+[{
+  "Firstname": "Troll",
+  "Lastname": "Face",
+  "age": 20,
+  "phoneNumber": [
+    {"number": "1111-1111", "type":  "home"},
+    {"number": "222-2222", "type":  "office"}
+    ]
+},
+  {
+  "Firstname": "Sax",
+  "Lastname": "Guy",
+  "age": 40,
+  "phoneNumber": [
+    {"number": "57657", "type":  "home"}
+    ]
+},
+  {
+  "Firstname": "Ricky",
+  "Lastname": "Rocky",
+  "age": 60,
+  "phoneNumber": [
+    {"number": "88888", "type":  "dance floor"},
+    {"number": "000-00", "type":  "mobile"},
+    {"number": "33", "type":  "fortnite"}
+    ]
+}]
