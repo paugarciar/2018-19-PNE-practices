@@ -37,3 +37,6 @@ while True:
     print("attending client: {}".format(address))
 
     process_client(clientsocket)
+
+    #closing the socket
+    clientsocket.close()
