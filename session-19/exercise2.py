@@ -3,36 +3,54 @@ import json
 
 # -- API information
 HOSTNAME = "www.metaweather.com"
-ENDPOINT1 = "/api/location/"
 
 # Choosing a capital
 capital = input("Please enter a capital: ")
 
-ENDPOINT2 = "/api/location/search/?query="+ capital
-
-
-
+ENDPOINT1 = "/api/location/search/?query=" + capital
 
 
 METHOD = "GET"
 
-headers = {'User-Agent': 'http-client'}
 
-conn = http.client.HTTPSConnection(HOSTNAME)
+def city_weather(endpoint):
 
-conn.request(METHOD, ENDPOINT2 + '/', None, headers)
+    headers = {'User-Agent': 'http-client'}
+    conn = http.client.HTTPSConnection(HOSTNAME)
 
-r1 = conn.getresponse()
+    conn.request(METHOD, endpoint, None, headers)
 
-# -- Print the status
-print()
-print("Response received: ", end='')
-print(r1.status, r1.reason)
+    r1 = conn.getresponse()
 
-text_json = r1.read().decode("utf-8")
-conn.close()
+    # -- Print the status
+    print()
+    print("Response received: ", end='')
+    print(r1.status, r1.reason)
 
-weather = json.loads(text_json)
+    text_json = r1.read().decode("utf-8")
+    conn.close()
 
-# -- Get the data
-print(weather)
+    result = json.loads(text_json)
+    return result
+
+
+try:
+    # --Calculating the woeid number of the city
+    woeid_number = city_weather(ENDPOINT1)
+    LOCATION_WOEID = str(woeid_number[0]['woeid'])
+
+    # --Calculating the weather characteristics
+    ENDPOINT2 = "/api/location/" + LOCATION_WOEID + "/"
+    weather = city_weather(ENDPOINT2)
+
+    temp0 = weather['consolidated_weather'][0]
+
+    print()
+    print("In {}".format(weather['title']))
+    print("The current time is: {}".format(weather['time']))
+    print("The sunset is at: {}".format(weather['sun_set']))
+    print("And the current temp is: {} degrees".format(temp0['the_temp']))
+
+except IndexError:
+    print("Capital not valid")
+
