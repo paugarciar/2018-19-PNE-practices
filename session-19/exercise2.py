@@ -22,11 +22,6 @@ def city_weather(endpoint):
 
     r1 = conn.getresponse()
 
-    # -- Print the status
-    print()
-    print("Response received: ", end='')
-    print(r1.status, r1.reason)
-
     text_json = r1.read().decode("utf-8")
     conn.close()
 
@@ -35,7 +30,7 @@ def city_weather(endpoint):
 
 
 try:
-    # --Calculating the woeid number of the city
+    # --Calculating the woeid number of the citysession-19/exercise2.py:25
     woeid_number = city_weather(ENDPOINT1)
     LOCATION_WOEID = str(woeid_number[0]['woeid'])
 
@@ -53,4 +48,3 @@ try:
 
 except IndexError:
     print("Capital not valid")
-
