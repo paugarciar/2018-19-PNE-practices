@@ -4,7 +4,7 @@ My notes:
 Can be tested in the same computer
 Network interface: connections in internet, each time that I create a path between computers it is called with an IP that identificates it
     IP ADDRESS SMARTPHONE AT UNIVERSITY: 10.0.45.178
-    IP ADDRESS MY COMPUTER: (terminal, ifconfig, inet) 212.128.253.73
+    IP ADDRESS MY COMPUTER: (terminal, ifconfig or ipconfig, inet) 212.128.253.73
     IP ADDRESS TEACHER COMPUTER: 212.128.253.64
 
 CLIENT:
