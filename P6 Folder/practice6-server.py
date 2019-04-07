@@ -6,6 +6,7 @@ PORT = 8000
 
 # Creation of seq class
 
+
 class Seq:
     """A class for representing sequences"""
 
@@ -16,7 +17,7 @@ class Seq:
         correct = True
 
         for letter in self.strbases:
-            if (letter != 'A') and (letter != 'C') and (letter != 'T') and (letter != 'G'):
+            if (letter != 'A') and (letter != 'C') and (letter != 'T') and (letter != 'G') or (len(self.strbases) == 0):
                 result = 'ERROR'  # there are letters that are not bases
                 correct = False
                 return result
@@ -27,93 +28,88 @@ class Seq:
     def len(self):
         return len(self.strbases)  # returns the length of our string(self.strbases)
 
-    def complement(self):
-        comp_str = ""  # this empty string will receive the complementary bases
-        pattern = {'A': 'T', 'C': 'G', 'G': 'C', 'T': 'A'}
-        for base in self.strbases:
-            comp_str += pattern[base]  # complementary bases are searched in the dictionary
-        return comp_str
-
-    def reverse(self):
-        rev_str = self.strbases[::-1]  # inverting the order of the bases
-        return rev_str
-
     def count(self, base):
         result = self.strbases.count(base)  # counting the base that we will introduce
         return result
 
     def perc(self, base):
-        tl = len(self.strbases)
-        n = self.strbases.count(base)
-        if tl > 0:
-            perc = round(100.0 * n / tl, 1)  # percentage with one decimal of precision
-
-        else:
-            perc = 0  # if there is an empty string
+        tl = self.len()
+        n = self.count(base)
+        perc = round(100.0 * n / tl, 1)  # percentage with one decimal of precision
         return perc
 
-
-class TestHandler(http.server.BaseHTTPRequestHandler):  # Objects with the properties of the library
-
-    def do_GET(self):
-
-        print("GET received")
-        print("Request line:" + self.requestline)
-        print(" Cmd: " + self.command)
-        print(" Path: " + self.path)
-        if self.path == "/":
-            page = "mainpage.html"
-
+    def match(self, pth):
+        # base for perc and count = path[-1]
+        # count/ perc = path[-2]
+        element = pth[-3] + pth[-1]
+        if element == "countA" or element == "countC" or element == "countT" or element == "countG":
+            c_msg = "Operation count on the" + pth[-1] + "base: "
+            tx1 = "\n" + c_msg + str(self.strbases.count(pth[-1]))
         else:
-            path = self.path
-            try:
-                path = path.split("=")
-                if len(path) == 4:  # Checkbutton deselected
-                    text = Seq(path[1])
+            p_msg = "Operation percentage on the" + pth[-1] + "base: "
+            tx1 = "\n" + p_msg + str(self.perc(pth[-1])) + "%"
+        # checkbutton selected
+        if pth[3] == "on":
+            l_msg = "The length of your sequence is"
+            tx1 = "\n" + l_msg + str(self.len()) + tx1
 
-                else:  # When the checkbutton is selected, the length is 5
-                    for elements in path:
-                        elements.split("&")
-                    tx = path[1]  # Text user
-                    tx2 = path[3]  # check selected
-                    tx3 = path[5]  # perc or count option
-                    tx4 = path[7]  # base selected
-                    text = Seq(tx[0])  # Replace strbases by the sequence
-                print(" User text:", text)
-                page = "response.html"
-            except IndexError:
-                page = "error-with-link.html"
+        return tx1
 
-        # -- printing the request line
-        termcolor.cprint(self.requestline, 'green')
+    class TestHandler(http.server.BaseHTTPRequestHandler):  # Objects with the properties of the library
 
-        f = open(page, 'r')
-        contents = f.read()
+        def do_GET(self):
 
-        # If the html response page is requested change the word text by the text of the user
-        if page == "response.html":
-            contents = contents.replace("text", text)
+            print("GET received")
+            print("Request line:" + self.requestline)
+            print(" Cmd: " + self.command)
+            print(" Path: " + self.path)
+            if self.path == "/":
+                page = "mainpage.html"
+            #elif self.path == "/Seq":
 
-        self.send_response(200)
+            else:
+                path = self.path
+                p = (path.replace("=", ",")).replace("&", ",")
+                path = p.split(",")  # Making a list dividing the string in the = and & symbols
+                dna = Seq(path[1].upper())  # Replace strbases by the sequence
 
-        self.send_header('Content-Type', 'text/html')
-        self.send_header('Content-Length', len(str.encode(contents)))
-        self.end_headers()
+                if dna.checking() == "ERROR":
+                    text = dna.checking()
+                else:
+                    text = dna.checking() + dna.match(path)
 
-        # -- sending the body of the response message
-        self.wfile.write(str.encode(contents))
+            print(" User text:", dna.strbases)
+            page = "response.html"
 
+            # -- printing the request line
+            termcolor.cprint(self.requestline, 'green')
 
-# -- Main program
-with socketserver.TCPServer(("", PORT), TestHandler) as httpd:
-    # "" means that the program must use the IP address of the computer
-    print("Serving at PORT: {}".format(PORT))
+            f = open(page, 'r')
+            contents = f.read()
 
-    try:
-        httpd.serve_forever()
-    except KeyboardInterrupt:
-        httpd.server_close()
+            # If the html response page is requested change the word text by the text of the user
+            if page == "response.html":
+                contents = contents.replace("text", text)
 
-print("The server is stopped")
+            self.send_response(200)
 
-# IMPLEMENT CLASSES AND ASK ABOUT THE RESOURCE /SEQ, CREATE ALSO ERROR PAGE
+            self.send_header('Content-Type', 'text/html')
+            self.send_header('Content-Length', len(str.encode(contents)))
+            self.end_headers()
+
+            # -- sending the body of the response message
+            self.wfile.write(str.encode(contents))
+
+    # -- Main program
+    with socketserver.TCPServer(("", PORT), TestHandler) as httpd:
+        # "" means that the program must use the IP address of the computer
+        print("Serving at PORT: {}".format(PORT))
+
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            httpd.server_close()
+
+    print("The server is stopped")
+
+    # ASK ABOUT THE RESOURCE /SEQ, CREATE ALSO ERROR PAGE
