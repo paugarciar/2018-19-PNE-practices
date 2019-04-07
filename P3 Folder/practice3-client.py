@@ -2,7 +2,7 @@ import socket
 
 # SERVER IP, PORT
 IP = "192.168.1.106"
-PORT = 8081
+PORT = 8080
 
 # Create the socket
 while True:
