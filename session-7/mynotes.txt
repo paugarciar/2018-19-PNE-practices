@@ -1,0 +1,41 @@
+My notes:
+
+*client-server model*
+Can be tested in the same computer
+Network interface: connections in internet, each time that I create a path between computers it is called with an IP that identificates it
+    IP ADDRESS SMARTPHONE AT UNIVERSITY: 10.0.45.178
+    IP ADDRESS MY COMPUTER: (terminal, ifconfig or ipconfig, inet) 212.128.253.73
+    IP ADDRESS TEACHER COMPUTER: 212.128.253.64
+
+CLIENT:
+-start communication and send to server
+-always need a server
+
+SERVER:
+-response to requests
+-doesn't need clients
+-need IP address to communicate
+-need port number to specify which server: in webpages is the number 80
+
+PING REQUEST:
+    (terminal, ping 8.8.8.8)
+    time=3.53 ms
+
+    (my ping 212.128.253.73)
+    time=0.065 ms
+
+    (classmate ping 212.128.253.72)
+    time=0.462 ms
+
+    (my smartphone ping 10.0.45.178)
+    time=95.5 ms
+
+URL: identifying a computer interface for humans
+If we ping a webpage address the request goes to a DNS server that returns the IP
+    (ping www.google.com)
+    time=3.46 ms
+
+    (ping www.urjc.es)
+    time=2.05 ms
+    text example ...
+text example ...
