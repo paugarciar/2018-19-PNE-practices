@@ -1,13 +1,16 @@
+# Calculating the sum of the numbers from 0 to n
+
 print('program to sum the n first integers')
 
-def sum_of_integers(s)
-    k=0
-    for i in range(s):
-        k=i+1+k
+
+def sum_of_integers(n):
+    k = 0
+    for i in range(n):
+        k = i+1+k
     return k
 
 
-int=int(input('please insert an integer number: '))
+int = int(input('please insert an integer number: '))
 print(sum_of_integers(int))
 
 """Correction
