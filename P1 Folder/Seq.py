@@ -1,5 +1,6 @@
 # Creation of seq class
 
+
 class Seq:
     """A class for representing sequences"""
 
