@@ -1,17 +1,19 @@
+# server that reads the sequence string and creates a Seq object. Then returns the complement sequence to the client
 import socket
 
 # Configure the Server's IP and PORT
-PORT = 8080
-IP = "192.168.1.34"
+PORT = 8081
+IP = "172.20.10.6"
 MAX_OPEN_REQUESTS = 5
 
 # Counting the number of connections
 number_con = 0
 
-# create an INET, STREAMing socket
+# Creating an INET, STREAMing socket
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# create the Seq class
+
+# Creating the Seq class
 class Seq:
     """A class for representing sequences"""
 
@@ -24,6 +26,8 @@ class Seq:
         for base in self.strbases:
             comp_str += pattern[base]  # complementary bases are searched in the dictionary
         return comp_str
+
+
 try:
     serversocket.bind((IP, PORT))
     # become a server socket
@@ -38,11 +42,11 @@ try:
         # Another connection!e
         number_con += 1
 
-        # Print the conection number
+        # Print the connection number
         print("CONNECTION: {}. From the IP: {}".format(number_con, address))
 
         # Read the message from the client, if any
-        msg = clientsocket.recv(2048).decode("utf-8")
+        msg = clientsocket.recv(2048).decode("utf-8").upper()
         sequence = Seq(msg).complement()
         print("Message from client: {}".format(msg))
         print("Complement sequence: {}\n".format(sequence))
@@ -53,6 +57,7 @@ try:
         clientsocket.send(send_bytes)
         clientsocket.close()
 
+# Dealing with errors
 except socket.error:
     print("Problems using port {}. Do you have permission?".format(PORT))
 
