@@ -1,60 +1,92 @@
+# Program to obtain FRAT1 gene and do some calculations
+
+# ------MY NOTES of api rest-------
+# GET info/genomes/:genome_name 	"base_count"->number of bases
+# EXAMPLE
+# /info/genomes/nanoarchaeum_equitans_kin4_m?content-type=application/json
+
+# GET sequence/id/:id
+# EXAMPLES
+# /sequence/id/GENSCAN00000000001?object_type=predictiontranscript;type=protein;content-type=..
+# ..application/json;db_type=core;species=homo_sapiens
+# /sequence/id/ENSP00000288602?content-type=application/json-> sequence
+
+
+# First we obtain the FRAT1 gene sequence
 import http.client
 import json
 
-# -- API information
-HOSTNAME = "http://www.ensembl.org"
-
-#MY NOTES:
-# /index.html->MAIN PAGE
-#/Multi/Search/Results?q=FRAT1;site=ensembl->DIF. OPTIONS WHEN YOU SEARCH SOMETHING
-#/Homo_sapiens/Gene/Summary?db=core;g=ENSG00000165879;r=10:97319267-97321915->FRAT1 WEBPAGE
-# FORGET
-
-# in api rest
-#GET info/genomes/:genome_name 	Find information about a given genome
-
-
-# Choosing a capital
-capital = input("Please enter a capital: ")
-
-ENDPOINT1 = "/api/location/search/?query=" + capital
-
-
+HOSTNAME = "rest.ensembl.org"
+ENDPOINT = "/sequence/id/ENSG00000165879?content-type=application/json"
 METHOD = "GET"
 
+headers = {'User-Agent': 'http-client'}
+conn = http.client.HTTPSConnection(HOSTNAME)
 
-def city_weather(endpoint):
+# -- Sending the request
+conn.request(METHOD, ENDPOINT, None, headers)
+r1 = conn.getresponse()
 
-    headers = {'User-Agent': 'http-client'}
-    conn = http.client.HTTPSConnection(HOSTNAME)
+# -- Printing the status
+print()
+print("Response received: ", end='')
+print(r1.status, r1.reason)
 
-    conn.request(METHOD, endpoint, None, headers)
+# -- Read the response's body and close connection
+text_json = r1.read().decode("utf-8")
+conn.close()
 
-    r1 = conn.getresponse()
-
-    text_json = r1.read().decode("utf-8")
-    conn.close()
-
-    result = json.loads(text_json)
-    return result
+result = json.loads(text_json)
 
 
-try:
-    # --Calculating the woeid number of the citysession-19/exercise2.py:25
-    woeid_number = city_weather(ENDPOINT1)
-    LOCATION_WOEID = str(woeid_number[0]['woeid'])
+# We create the Seq class
+class Seq:
+    """A class for representing sequences"""
 
-    # --Calculating the weather characteristics
-    ENDPOINT2 = "/api/location/" + LOCATION_WOEID + "/"
-    weather = city_weather(ENDPOINT2)
+    def __init__(self, strbases):
+        self.strbases = strbases  # self.strbases now represents my initial string
 
-    temp0 = weather['consolidated_weather'][0]
+    # Length of the string
+    def len(self):
+        return len(self.strbases)  # returns the length of our string(self.strbases)
 
-    print()
-    print("In {}".format(weather['title']))
-    print("The current time is: {}".format(weather['time']))
-    print("The sunset is at: {}".format(weather['sun_set']))
-    print("And the current temp is: {} degrees".format(temp0['the_temp']))
+    # Number of a concrete base
+    def count(self, base):
+        res = self.strbases.count(base)  # counting the base that we will introduce
+        return res
 
-except IndexError:
-    print("Capital not valid")
+    # Percentage of a concrete base
+    def perc(self, base):
+        tl = self.len()
+        for e in base:
+            n = self.count(e)
+            res = round(100.0 * n / tl, 1)  # percentage with one decimal of precision
+            return res
+
+    # The percentage of the most popular  base
+    def results(self, dict_p):
+        s1 = "The total number of bases in FRAT1 gene is: "+str(self.len())
+        s2 = "The number of T bases is: "+str(self.count("T"))
+        s3 = ""
+        s4 = ""
+        for key, value in dict_p.items():
+            if value == max(dict_p.values()):
+                s3 = "The most popular base is " + str(key) + " and its percentage is " + str(value)
+            s4 += "The percentage of " + str(key) + " is " + str(value) + "\n"
+
+        s = s1 + "\n" + s2 + "\n" + s3 + "\n" + s4
+        return s
+
+
+# --Main program
+# Creating an object and printing the results
+sequence = Seq(result["seq"])
+
+bases = "ACTG"  # string to iterate over the bases
+percentage = {}  # dictionary for percentages
+
+# adding information to the dictionary
+for i in bases:
+    percentage[i] = str(sequence.perc(i))+"%"  # percentage symbol string need another string to be added
+
+print(sequence.results(percentage))  # printing finally the results
