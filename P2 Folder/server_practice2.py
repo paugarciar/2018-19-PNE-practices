@@ -1,14 +1,16 @@
+# Server that prints the reverse complement sequence received from the client
+
 import socket
 
 # Configure the Server's IP and PORT
 PORT = 8081
-IP = "192.168.1.106"
+IP = "192.168.1.20"
 MAX_OPEN_REQUESTS = 5
 
 # Counting the number of connections
 number_con = 0
 
-# create an INET, STREAMing socket
+# Creating an INET, STREAMing socket
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
     serversocket.bind((IP, PORT))
@@ -21,23 +23,19 @@ try:
         print("Waiting for connections at {}, {} ".format(IP, PORT))
         (clientsocket, address) = serversocket.accept()
 
-        # Another connection!e
+        # Another connection
         number_con += 1
 
-        # Print the conection number
+        # Print the connection number
         print("CONNECTION: {}. From the IP: {}".format(number_con, address))
 
-        # Read the message from the client, if any
+        # Decoding and printing the message from the client
         msg = clientsocket.recv(2048).decode("utf-8")
         print("Message from client: {}".format(msg))
 
-        # Send the messag
-        message = "Hello from the teacher's server"
-        send_bytes = str.encode(message)
-        # We must write bytes, not a string
-        clientsocket.send(send_bytes)
         clientsocket.close()
 
+# Dealing with errors
 except socket.error:
     print("Problems using port {}. Do you have permission?".format(PORT))
 
