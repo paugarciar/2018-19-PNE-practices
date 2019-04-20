@@ -1,4 +1,10 @@
-# definition of the class
+# Client that uses objects to transform a sequence entered by the user into
+# a complement-reverse sequence
+
+import socket
+
+
+# Definition of the class
 class Seq:
     """A class for representing sequences"""
 
@@ -18,7 +24,6 @@ class Seq:
 
 
 # main program
-import socket
 
 # loop to go on chatting
 connected = True
@@ -29,10 +34,10 @@ while connected:
     print("socket created")
 
     PORT = 8081
-    IP = "192.168.1.106"
+    IP = "192.168.1.20"
 
     s.connect((IP, PORT))
-    seq1 = Seq(input("\nwrite a sequence to obtain the reverse-complement: "))
+    seq1 = Seq(input("\nwrite a sequence to obtain the reverse-complement: ").upper())
     seq2 = Seq(seq1.reverse()).complement()
     print("reverse-complement sequence: ", seq2)
     # converting the strings into binary code
