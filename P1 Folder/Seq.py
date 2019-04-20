@@ -1,6 +1,4 @@
-# Creation of seq class
-
-
+# Creation of seq class that will be used in Seq_main.py
 class Seq:
     """A class for representing sequences"""
 
