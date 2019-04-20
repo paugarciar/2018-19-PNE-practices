@@ -1,3 +1,6 @@
+# Program to calculate the length, number and percentage of bases of different DNA strings
+
+
 # Creation of seq class
 class Seq:
     """A class for representing sequences"""
