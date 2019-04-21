@@ -1,7 +1,8 @@
+# Client that can request several operations (len, complement, reverse, count, percentage) about a DNA sequence
 import socket
 
 # SERVER IP, PORT
-IP = "192.168.1.106"
+IP = "192.168.1.20"
 PORT = 8080
 
 # Create the socket
