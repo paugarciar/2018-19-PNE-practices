@@ -2,16 +2,15 @@
 # The response will be different depending on the instructions and text entered
 # sending an error message when it's necessary
 
-import http.server  # libraries to use the server
+import http.server
 import socketserver
 import termcolor
 
+# Server's port
 PORT = 8000
 
 
 # Creation of seq class with all the definitions related to the string that the user introduces
-
-
 class Seq:
     """A class for representing sequences"""
 
@@ -52,15 +51,17 @@ class Seq:
         # count/ perc = path[-3]
         element = pth[-3] + pth[-1]
 
+        # In case we had chosen count
         if element == "countA" or element == "countC" or element == "countT" or element == "countG":
             c_msg = "Operation count on the " + pth[-1] + " base: "
             tx1 = "<br>" + c_msg + str(self.strbases.count(pth[-1]))
 
+        # In case we had chosen percentage
         else:
             p_msg = "Operation percentage on the " + pth[-1] + " base: "
             tx1 = "<br>" + p_msg + str(self.perc(pth[-1])) + "%"
 
-        # checkbutton selected
+        # With checkbutton selected
         if pth[3] == "on":
             l_msg = "The length of your sequence is: "
             tx1 = "<br>" + l_msg + str(self.len()) + tx1
@@ -68,29 +69,37 @@ class Seq:
         return tx1
 
 
+# Class with our Handler that inheritates all his methods and properties
 class TestHandler(http.server.BaseHTTPRequestHandler):  # Objects with the properties of the library
 
     def do_GET(self):
+        """This method is called whenever the client invokes the GET method
+        in the HTTP protocol request"""
 
+        # Printing in the server some useful information
         print("GET received")
         print("Request line:" + self.requestline)
         print(" Cmd: " + self.command)
         print(" Path: " + self.path)
+
+        # Separating and selecting the information of the path
         calling_response = self.path.split("?")[0]
 
+        # Assigning to the variable page different html pages names in function of the request
+        text = ""
         if self.path == "/":
             page = "mainpage.html"
 
-        elif calling_response == "/Seq":
+        elif calling_response == "/Seq":  # Using the resource /Seq
             path = self.path
             p = (path.replace("=", ",")).replace("&", ",")
             path = p.split(",")  # Making a list dividing the string in the = and & symbols
             dna = Seq(path[1].upper())  # Replace strbases by the sequence
 
-            if dna.checking() == "ERROR":
+            if dna.checking() == "ERROR":  # If the DNA sequence is wrong
                 text = dna.checking()
             else:
-                text = dna.checking() + dna.match(path)
+                text = dna.checking() + dna.match(path)  # Otherwise send all the information
 
             print(" User text:", dna)
             page = "response.html"
@@ -102,14 +111,14 @@ class TestHandler(http.server.BaseHTTPRequestHandler):  # Objects with the prope
         termcolor.cprint(self.requestline, 'green')
 
         f = open(page, 'r')
-        contents = f.read()
+        contents = f.read()  # reading the contents of the selected page
 
         # If the html response page is requested change the word text by the text of the user
         if page == "response.html":
             contents = contents.replace("text", text)
 
+        # Generating and sending the response message according to the request
         self.send_response(200)
-
         self.send_header('Content-Type', 'text/html')
         self.send_header('Content-Length', len(str.encode(contents)))
         self.end_headers()
